@@ -1,0 +1,28 @@
+{
+  "name": "simple-log-manager",
+  "version": "0.1.0",
+  "description": "simple log manager with different output types",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toxity/simple-log-manager.git"
+  },
+  "dependencies": {
+    "simple-node-logger": "^0.93.17"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-es2015": "^6.24.1"
+  },
+  "scripts": {
+    "build": "$(npm bin)/babel src -d lib",
+    "prepublich": "npm run test",
+    "test": "mocha"
+  },
+  "author": {
+    "name": "Ivan Minich",
+    "email": "minich.job@gmail.com"
+  },
+  "license": "MIT"
+}
