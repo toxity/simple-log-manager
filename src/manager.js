@@ -3,7 +3,7 @@
  */
 'use strict';
 const loggers = [];
-const outputs = ["console", "file"];
+const outputs = ["console", "file", "dummy"];
 const default_output = "file";
 
 function checkOutput (output) {
@@ -23,17 +23,33 @@ function Logger (name, outputType, fileLoggerOptions) {
         this.type = outputType;
     }
 
-    if (this.type === "file") {
-        const fs = require("fs");
-        const FileLogger = require("./file-logger");
+    switch (this.type) {
+        case "file": {
+            const fs = require("fs");
+            const FileLogger = require("./file-logger");
 
-        this.logger = new FileLogger(fileLoggerOptions);
+            this.logger = new FileLogger(fileLoggerOptions);
 
-        if (!fs.existsSync(fileLoggerOptions.dir)) {
-            fs.mkdirSync(fileLoggerOptions.dir);
+            if (!fs.existsSync(fileLoggerOptions.dir)) {
+                fs.mkdirSync(fileLoggerOptions.dir);
+            }
+            break;
         }
-    } else {
-        this.logger = console;
+        case "console": {
+            this.logger = console;
+            break;
+        }
+        case "dummy": {
+            this.logger = {
+                log : () => {},
+                warn : () => {},
+                error : () => {},
+                info : () => {}
+            };
+            break;
+        }
+        default:
+            throw Error ("Unknown logger type");
     }
 }
 
@@ -58,6 +74,10 @@ Logger.prototype = {
 };
 
 const create = function (name, type, options) {
+    if (!name) {
+        throw Error ("Name should be specified");
+    }
+
     for (const logger of loggers) {
         if (logger.name === name) {
             throw new Error ("Trying to create already existed logger "+name);
@@ -65,7 +85,9 @@ const create = function (name, type, options) {
     }
 
     const logger = new Logger(name, type, options);
+
     loggers.push(logger);
+
     return logger;
 };
 
@@ -87,13 +109,8 @@ module.exports = {
         return create(name, "console");
     },
 
-    createDummyLogger: function () {
-        return {
-            log : () => {},
-            warn : () => {},
-            error : () => {},
-            info : () => {}
-        }
+    createDummyLogger: function (name) {
+        return create(name, "dummy");
     },
 
     delete: function (name) {

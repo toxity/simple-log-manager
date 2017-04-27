@@ -19,6 +19,10 @@ describe('log-manager', () => {
                 assert.equal(logger.name, "logger");
             });
 
+            it('should throw without name', () => {
+                assert.throws(() => manager.createConsoleLogger());
+            });
+
             it('should throw during creating of existed logger', () => {
                 assert.throws(() => manager.createConsoleLogger("logger"));
             });
@@ -74,6 +78,10 @@ describe('log-manager', () => {
             it('should throw during creating of existed logger', () => {
                 assert.throws(() => getFileLoader());
             });
+
+            it('should throw without name', () => {
+                assert.throws(() => manager.createFileLogger());
+            });
         });
 
         describe('delete', () => {
@@ -104,9 +112,17 @@ describe('log-manager', () => {
     });
 
     describe('dummy-logger', () => {
+        after(() => {
+            manager.delete('logger');
+        });
+
         it('should return dummy logger', () => {
             const logger = manager.createDummyLogger("logger");
-            assert.notEqual(logger.log, undefined);
+            assert.equal(logger.name, "logger");
+        });
+
+        it('should throw without name', () => {
+            assert.throws(() => manager.createDummyLogger());
         });
     });
 });
