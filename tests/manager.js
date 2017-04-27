@@ -7,9 +7,9 @@ const manager = require('./../index');
 
 describe('log-manager', () => {
     
-    describe('console-logger', function () {
+    describe('console-logger', () => {
 
-        describe('create', function () {
+        describe('create', () => {
             after(() => {
                 manager.delete('logger');
             });
@@ -35,7 +35,7 @@ describe('log-manager', () => {
             });
         });
 
-        describe('get', function () {
+        describe('get', () => {
             after(() => {
                 manager.delete('logger');
             });
@@ -52,7 +52,8 @@ describe('log-manager', () => {
             });
         });
     });
-    describe('file-logger', function () {
+
+    describe('file-logger', () => {
         function getFileLoader () {
             const path = require('path');
             const dir = path.join(__dirname, '..', 'logs');
@@ -60,7 +61,7 @@ describe('log-manager', () => {
             return manager.createFileLogger("logger", { dir: dir, fileName: "test.log"})
         }
 
-        describe('create', function () {
+        describe('create', () => {
             after(() => {
                 manager.delete('logger');
             });
@@ -84,7 +85,7 @@ describe('log-manager', () => {
             });
         });
 
-        describe('get', function () {
+        describe('get', () => {
             after(() => {
                 manager.delete('logger');
             });
@@ -99,6 +100,13 @@ describe('log-manager', () => {
                 const logger = manager.get("logger");
                 assert.equal(logger.name, "logger");
             });
+        });
+    });
+
+    describe('dummy-logger', () => {
+        it('should return dummy logger', () => {
+            const logger = manager.createDummyLogger("logger");
+            assert.notEqual(logger.log, undefined);
         });
     });
 });

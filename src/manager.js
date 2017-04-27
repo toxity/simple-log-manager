@@ -78,12 +78,24 @@ module.exports = {
         }
         return null;
     },
+
     createFileLogger: function (name, options) {
         return create(name, "file", options);
     },
+
     createConsoleLogger: function (name) {
         return create(name, "console");
     },
+
+    createDummyLogger: function () {
+        return {
+            log : () => {},
+            warn : () => {},
+            error : () => {},
+            info : () => {}
+        }
+    },
+
     delete: function (name) {
         for (let i = 0; i < loggers.length; i++ ) {
             const logger = loggers[i];
