@@ -12,10 +12,7 @@
     "node": "4.2.3",
     "npm": "3.10.8"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/toxity/simple-log-manager.git"
-  },
+  "repository": "git@github.com:toxity/simple-log-manager.git",
   "dependencies": {
     "moment": "^2.18.1"
   },

@@ -94,7 +94,7 @@ Example
     var manager = require('simple-log-manager');
 
     manager.createConsoleLogger("console");
-    manager.createConsoleLogger("file", {
+    manager.createFileLogger("file", {
         fileName: "test",
         dir: "logs"
     });
