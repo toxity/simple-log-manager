@@ -6,15 +6,27 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 
+const defaultDateFormat = 'DD_MM';
+
 const helper = {
-    parseFileNamePattern: function (pattern, dateFormat) {
-        if (pattern.match(/<DATE>/)) {
-            return pattern.replace(/<DATE>/, moment().format( dateFormat || 'DD_MM'));
+    createWriter: function () {
+        if (this.writer) {
+            this.writer.close();
         }
 
-        return pattern;
+        const file = (path.join( this.options.dir, this.options.fileName ));
+
+        this.writer = fs.createWriteStream( file, {
+            flags:'a',
+            encoding:'utf8'
+        });
     },
-    checkOptions: function (options) {
+    parseFileName: (options) => {
+        if (options.fileNamePattern) {
+            return options.fileNamePattern.replace(/<DATE>/, moment().format(options.dateFormat || defaultDateFormat));
+        }
+    },
+    checkOptions: (options) => {
         const required = ["dir", "fileName"];
         if (!options || typeof options !== 'object') {
             throw Error ('Options should be specified');
@@ -38,47 +50,50 @@ const helper = {
             result += ` ${argument}`;
         }
         return result+"\n";
-    },
+    }
 };
 
-function FileLogger (options) {
-    if (options.fileNamePattern) {
-        options.fileName = helper.parseFileNamePattern(options.fileNamePattern, options.dateFormat);
+class FileLogger {
+    constructor (options) {
+        if (options && options.fileNamePattern) {
+            if (options.fileNamePattern.match(/<DATE>/)) {
+                this.outputDate = moment();
+                options.fileName = helper.parseFileName(options);
+            }
+        }
+
+        this.options = helper.checkOptions(options);
+
+        if (!fs.existsSync(this.options.dir)) {
+            fs.mkdirSync(this.options.dir);
+        }
+
+        helper.createWriter.call(this);
     }
 
-    this.options = helper.checkOptions(options);
-
-    if (!fs.existsSync(this.options.dir)) {
-        fs.mkdirSync(this.options.dir);
-    }
-
-    const file = path.join( this.options.dir, this.options.fileName );
-
-    this.writer = fs.createWriteStream( file, {
-        flags:'a',
-        encoding:'utf8'
-    });
-}
-
-FileLogger.prototype = {
-    log: function () {
+    log () {
         this.write("log", ...arguments);
-    },
-    warn: function () {
+    }
+    warn () {
         this.write("warn", ...arguments);
-    },
-    error: function () {
+    }
+    error () {
         this.write("error", ...arguments);
-    },
-    info: function () {
+    }
+    info () {
         this.write("info", ...arguments);
-    },
-    write: function () {
+    }
+    write () {
+        if (this.outputDate && this.outputDate.diff(moment(), 'days')) {
+            this.options.fileName = helper.parseFileName(this.options);
+            this.outputDate = moment();
+            helper.createWriter.call(this);
+        }
         this.writer.write(helper.formatMessage.apply(this, arguments));
-    },
-    end: function () {
+    }
+    end () {
         this.writer.end();
     }
-};
+}
 
 module.exports = FileLogger;
