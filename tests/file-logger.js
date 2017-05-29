@@ -21,7 +21,6 @@ describe('file-logger', () => {
         if (fs.existsSync(logsFile)) {
             fs.unlinkSync(logsFile);
         }
-
     });
 
     it('should create new file-logger', () => {
@@ -45,9 +44,10 @@ describe('file-logger', () => {
         });
 
         assert.notEqual(logger.writer, undefined);
-        assert.equal(fs.existsSync(pathToFile), true);
 
-        fs.unlinkSync(pathToFile);
+        return logger.writer.on('open', function () {
+            assert.equal(fs.existsSync(pathToFile), true);
+        });
     });
 
     it ('should create logger file by pattern with date format', () => {
@@ -62,9 +62,11 @@ describe('file-logger', () => {
         });
 
         assert.notEqual(logger.writer, undefined);
-        assert.equal(fs.existsSync(pathToFile), true);
 
-        fs.unlinkSync(pathToFile);
+        return logger.writer.on('open', function () {
+            assert.equal(fs.existsSync(pathToFile), true);
+            fs.unlinkSync(pathToFile);
+        });
     });
 
     it.skip ('should create new file when next date come', () => {
