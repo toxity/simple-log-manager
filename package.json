@@ -1,6 +1,6 @@
 {
   "name": "simple-log-manager",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "simple log manager with different output types",
   "author": {
     "name": "Ivan Minich",
