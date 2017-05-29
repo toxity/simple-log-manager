@@ -1,6 +1,6 @@
 {
   "name": "simple-log-manager",
-  "version": "0.4.0",
+  "version": "1.0.1",
   "description": "simple log manager with different output types",
   "author": {
     "name": "Ivan Minich",
@@ -12,10 +12,7 @@
     "node": "4.2.3",
     "npm": "3.10.8"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/toxity/simple-log-manager.git"
-  },
+  "repository": "git@github.com:toxity/simple-log-manager.git",
   "dependencies": {
     "moment": "^2.18.1"
   },
@@ -27,7 +24,7 @@
   },
   "scripts": {
     "build": "$(npm bin)/babel src -d lib --presets babel-preset-es2015",
-    "prepublich": "npm run test",
+    "prepublish": "npm run test",
     "test": "mocha -d tests --compilers js:babel-core/register"
   },
   "os": [
