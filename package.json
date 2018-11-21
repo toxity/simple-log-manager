@@ -26,11 +26,8 @@
   "scripts": {
     "build": "$(npm bin)/babel src -d lib --presets babel-preset-es2015",
     "prepublish": "npm run test",
-    "test": "LOG=false mocha -d tests --compilers js:babel-core/register"
+    "test": "LOG=false mocha -d --inspect tests --compilers js:babel-core/register"
   },
-  "os": [
-    "linux"
-  ],
   "bugs": {
     "url": "https://github.com/toxity/simple-log-manager/issues"
   },
