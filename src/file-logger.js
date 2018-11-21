@@ -84,7 +84,6 @@ class FileLogger {
         this.write("info", ...arguments);
     }
     write () {
-        console.log(this.outputDate && !this.outputDate.isSame(moment(), 'day'));
         if (this.outputDate && !this.outputDate.isSame(moment(), 'day')) {
             this.options.fileName = helper.parseFileName(this.options);
             this.outputDate = moment();
